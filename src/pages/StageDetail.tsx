@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { Screen } from "@/components/layout/Screen";
-import { Card, ProgressBar, Button } from "@/components/ui/primitives";
+import { Card, ProgressBar } from "@/components/ui/primitives";
 import { roadmapStages } from "@/data/roadmapStages";
+import { hiraganaLessons } from "@/data/hiraganaLessons";
 import { useProgressStore } from "@/hooks/useProgressStore";
 
 export default function StageDetail() {
@@ -57,28 +58,61 @@ export default function StageDetail() {
 
       <section className="mt-5">
         <h2 className="mb-2 text-sm font-semibold text-ink-400">Lessons</h2>
-        <div className="grid grid-cols-4 gap-2">
-          {lessons.map((n) => {
-            const unlocked = percent >= ((n - 1) / lessons.length) * 100;
-            return (
-              <button
-                key={n}
-                disabled={!unlocked}
-                onClick={() =>
-                  setStageProgress(stage.id, Math.min(100, Math.round((n / lessons.length) * 100)))
-                }
-                className="flex aspect-square items-center justify-center rounded-2xl border border-ink-950/10 bg-paper-50 text-sm font-semibold shadow-card disabled:opacity-30"
-              >
-                {n}
-              </button>
-            );
-          })}
-        </div>
+        {stage.id === "hiragana" ? (
+          <div className="space-y-2">
+            {hiraganaLessons.map((l) => {
+              const unlocked = percent >= ((l.number - 1) / lessons.length) * 100;
+              const completed = percent >= (l.number / lessons.length) * 100;
+              return (
+                <button
+                  key={l.number}
+                  disabled={!unlocked}
+                  onClick={() => navigate(`/roadmap/hiragana/lesson/${l.number}`)}
+                  className="flex w-full items-center gap-3 rounded-2xl border border-ink-950/10 bg-paper-50 p-3 text-left shadow-card disabled:opacity-30"
+                >
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${
+                      completed ? "bg-accent-soul text-paper-50" : "bg-ink-950 text-paper-50"
+                    }`}
+                  >
+                    {l.number}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold">{l.title}</p>
+                    <p className="text-xs text-ink-400">
+                      {l.mode === "review" ? "Review" : "Belajar"} · {l.chars.length} karakter
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 gap-2">
+            {lessons.map((n) => {
+              const unlocked = percent >= ((n - 1) / lessons.length) * 100;
+              return (
+                <button
+                  key={n}
+                  disabled={!unlocked}
+                  onClick={() =>
+                    setStageProgress(stage.id, Math.min(100, Math.round((n / lessons.length) * 100)))
+                  }
+                  className="flex aspect-square items-center justify-center rounded-2xl border border-ink-950/10 bg-paper-50 text-sm font-semibold shadow-card disabled:opacity-30"
+                >
+                  {n}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </section>
 
-      <Button className="mt-6 w-full" onClick={() => navigate(`/practice`)}>
-        Latihan {stage.title}
-      </Button>
+      {stage.id !== "hiragana" && (
+        <Card className="mt-6 p-4 text-center text-sm text-ink-400">
+          Materi lesson untuk {stage.title} belum dibuat — baru Hiragana yang sudah lengkap dengan flashcard & quiz.
+        </Card>
+      )}
     </Screen>
   );
 }

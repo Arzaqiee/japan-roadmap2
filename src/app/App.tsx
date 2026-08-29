@@ -5,6 +5,7 @@ import { initNative } from "@/lib/nativeBootstrap";
 import Home from "@/pages/Home";
 import Roadmap from "@/pages/Roadmap";
 import StageDetail from "@/pages/StageDetail";
+import HiraganaLessonScreen from "@/pages/HiraganaLessonScreen";
 import Practice from "@/pages/Practice";
 import Review from "@/pages/Review";
 import Profile from "@/pages/Profile";
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/roadmap" element={<Roadmap />} />
         <Route path="/roadmap/:stageId" element={<StageDetail />} />
+        <Route path="/roadmap/hiragana/lesson/:lessonNumber" element={<HiraganaLessonScreen />} />
         <Route path="/practice" element={<Practice />} />
         <Route path="/review" element={<Review />} />
         <Route path="/profile" element={<Profile />} />
